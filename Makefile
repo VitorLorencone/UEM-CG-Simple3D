@@ -26,7 +26,7 @@ LIBS = -L$(SDL_PATH)/lib -lmingw32 -lSDL2main -lSDL2
 
 # Flags & Compiler
 CXX = g++
-CXXFLAGS = -Wall -O2 $(INC)
+CXXFLAGS = -Wall -O2 -MMD -MP $(INC)
 
 # Target file name
 TARGET = $(BIN_DIR)/programa${EXT}
@@ -44,6 +44,9 @@ $(TARGET): $(OBJS)
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(MKDIR) $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Headers
+-include *.d
 
 # Run Rule (> make run)
 run: $(TARGET)
