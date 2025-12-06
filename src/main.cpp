@@ -124,7 +124,7 @@ int main(int argc, char** argv) {
             world.rotateSpeedY = y;
         
         }else {
-            std::cerr << "Linha ignorada: " << line << "\n";
+            // Ignorar
         }
     }
 
