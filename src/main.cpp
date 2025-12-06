@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <unordered_map>
+#include <filesystem>
 #include <string>
 #include "../include/constants.h"
 #include "../include/math3d.h"
@@ -51,9 +52,11 @@ int main(int argc, char** argv) {
     World world = World();
 
     // Corrigir
-    std::string filename = "scene.txt";
+    std::filesystem::path exe_path = argv[0];
+    std::filesystem::path exe_dir = exe_path.parent_path();
+    std::filesystem::path full_filename = exe_dir / "scene.txt";
 
-    std::ifstream file(filename);
+    std::ifstream file(full_filename);
     if (!file.is_open()) {
         std::cerr << "Erro ao abrir arquivo scene.txt, garanta que ele exista no mesmo diretório\n";
         return 1;
