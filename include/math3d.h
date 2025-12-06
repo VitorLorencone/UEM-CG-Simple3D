@@ -9,12 +9,14 @@ struct Vec2 {
     Vec2(float X,float Y):x(X),y(Y){}
 };
 
+struct Vec4;
+
 // Estrutura de vetor com 3 entradas
 struct Vec3 {
     float x,y,z;
     Vec3() : x(0),y(0),z(0) {}
     Vec3(float X,float Y,float Z):x(X),y(Y),z(Z){}
-    Vec3(Vec4 hp):x(hp.x/hp.w),y(hp.y/hp.w),z(hp.z/hp.w){}
+    Vec3(const Vec4& v);
 };
 
 // Estrutura de vetor com 4 entradas
@@ -22,7 +24,16 @@ struct Vec4 {
     float x,y,z,w;
     Vec4():x(0),y(0),z(0),w(0){}
     Vec4(float X,float Y,float Z,float W):x(X),y(Y),z(Z),w(W){}
-    Vec4(Vec3 p):x(p.x),y(p.y),z(p.z),w(1){}
+    Vec4(Vec3 p):x(p.x),y(p.y),z(p.z),w(1.0f){}
+};
+
+inline Vec3::Vec3(const Vec4& v)
+    : x(v.x/v.w), y(v.y/v.w), z(v.z/v.w) {}
+
+// Estrutura de matriz 3x3
+struct Mat3 {
+    float m[3][3];
+    static Mat3 identity(){ Mat3 a; for(int i=0;i<3;i++) for(int j=0;j<3;j++) a.m[i][j]=(i==j)?1.0f:0.0f; return a; }
 };
 
 // Estrutura de matriz 4x4
@@ -31,6 +42,7 @@ struct Mat4 {
     static Mat4 identity(){ Mat4 a; for(int i=0;i<4;i++) for(int j=0;j<4;j++) a.m[i][j]=(i==j)?1.0f:0.0f; return a; }
 };
 
+// Produto vetorial
 inline Vec3 vec_prod(const Vec3 v, const Vec3 u){
     Vec3 r;
     r.x = v.y*u.z - v.z*u.y;
@@ -39,11 +51,12 @@ inline Vec3 vec_prod(const Vec3 v, const Vec3 u){
     return r;
 }
 
+// Norma euclidiana
 inline float mod(const Vec3 v){
     return sqrtf(v.x*v.x + v.y*v.y + v.z*v.z);
 }
 
-// Multiplicação de matriz por vetor
+// Multiplicação de matriz por vetor 4x4
 inline Vec4 mul(const Mat4 &M, const Vec4 &v){
     Vec4 r;
     r.x = M.m[0][0]*v.x + M.m[0][1]*v.y + M.m[0][2]*v.z + M.m[0][3]*v.w;
@@ -53,7 +66,50 @@ inline Vec4 mul(const Mat4 &M, const Vec4 &v){
     return r;
 }
 
-// Multiplicação de metrizes 4x4
+// Multiplicação de matriz por vetor 3x3
+inline Vec3 mul3(const Mat3 &M, const Vec3 &v){
+    Vec3 r;
+    r.x = M.m[0][0]*v.x + M.m[0][1]*v.y + M.m[0][2]*v.z;
+    r.y = M.m[1][0]*v.x + M.m[1][1]*v.y + M.m[1][2]*v.z;
+    r.z = M.m[2][0]*v.x + M.m[2][1]*v.y + M.m[2][2]*v.z;
+    return r;
+}
+
+// Sobrecarga de operadores
+
+inline Vec3 operator+(const Vec3& a, const Vec3& b) {
+    return Vec3(a.x + b.x, a.y + b.y, a.z + b.z);
+}
+
+inline Vec3 operator-(const Vec3& a, const Vec3& b) {
+    return Vec3(a.x - b.x, a.y - b.y, a.z - b.z);
+}
+
+inline Vec3 operator*(const Vec3& v, float s) {
+    return Vec3(v.x * s, v.y * s, v.z * s);
+}
+
+inline Vec3 operator*(float s, const Vec3& v) {
+    return Vec3(v.x * s, v.y * s, v.z * s);
+}
+
+inline Vec4 operator+(const Vec4& a, const Vec4& b) {
+    return Vec4(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
+}
+
+inline Vec4 operator-(const Vec4& a, const Vec4& b) {
+    return Vec4(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
+}
+
+inline Vec4 operator*(const Vec4 v, float s) {
+    return Vec4(v.x * s, v.y * s, v.z * s, v.w * s);
+}
+
+inline Vec4 operator*(float s, const Vec4& v) {
+    return Vec4(v.x * s, v.y * s, v.z * s, v.w * s);
+}
+
+// Multiplicação de matrizes 4x4
 inline Mat4 multiply(const Mat4 &A, const Mat4 &B){
     Mat4 R; for(int i=0;i<4;i++) for(int j=0;j<4;j++){ R.m[i][j]=0; for(int k=0;k<4;k++) R.m[i][j]+=A.m[i][k]*B.m[k][j]; }
     return R;

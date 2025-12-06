@@ -1,24 +1,36 @@
 #include "../include/objects.h"
 
-// Definições
-Point::Point(){
-    this->coord = Vec3(0, 0, 0);
+World::World(){
+    this->camera = Vec3(CAMERA_X_START, CAMERA_Y_START, CAMERA_Z_START);
+    this->pitch = PITCH_START;
+    this->yaw = YAW_START;
+    this->cameraSpeed = CAMERA_SPEED;
+    this->translate = {0, 0, 0};
+    this->rotateX = 0.0f;
+    this->rotateY = 0.0f;
+    this->rotateSpeedX = 0.0f;
+    this->rotateSpeedY = 0.0f;
 }
 
-Point::Point(float x, float y, float z){
-    this->coord = Vec3(x, y, z);
-}
+void drawThickLine(SDL_Renderer* renderer, float x1, float y1, float x2, float y2, float thickness) {
+    
+    if (thickness <= 1.0f) {
+        SDL_RenderDrawLineF(renderer, x1, y1, x2, y2);
+        return;
+    }
 
-Point::Point(Vec3 p){
-    this->coord = p;
-}
+    float dx = x2 - x1;
+    float dy = y2 - y1;
+    float length = sqrtf(dx * dx + dy * dy);
 
-Segment::Segment(float x1, float y1, float z1, float x2, float y2, float z2){
-    this->p.coord = Vec3(x1, y1, z1);
-    this->q.coord = Vec3(x2, y2, z2);
-}
+    if (length == 0) return;
 
-Segment::Segment(Point p1, Point p2){
-    this->p = p1;
-    this->q = p2;
+    float nx = -dy / length;
+    float ny = dx / length;
+
+    for (float i = -thickness / 2.0f; i <= thickness / 2.0f; i += 0.5f) {
+        float offsetX = nx * i;
+        float offsetY = ny * i;
+        SDL_RenderDrawLineF(renderer, x1 + offsetX, y1 + offsetY, x2 + offsetX, y2 + offsetY);
+    }
 }

@@ -29,7 +29,7 @@ CXX = g++
 CXXFLAGS = -Wall -O2 -MMD -MP $(INC)
 
 # Target file name
-TARGET = $(BIN_DIR)/programa${EXT}
+TARGET = $(BIN_DIR)/Simple3D${EXT}
 
 # Default Rule (> make)
 all: $(TARGET)
@@ -55,4 +55,5 @@ run: $(TARGET)
 # Clean Rule (> make clean)
 clean:
 	$(RM) $(BUILD_DIR)/*.o
+	$(RM) $(BUILD_DIR)/*.d
 	$(RM) $(TARGET)
