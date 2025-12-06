@@ -3,11 +3,13 @@ Computer Graphics assingment for CS course UEM.
 
 Implement a projective visualization system based on conical perspective.
 
+![img2](./assets/cube.png "Cube")
+
 ## Simple3D
 
 Application software for the graphics pipeline, utilizing primitive SDL2 functions with support for Linux and Windows.
 
-
+![img1](./assets/sphere.png "Sphere")
 
 ## Linux requirements
 
